@@ -45,10 +45,70 @@ async function initDb() {
   });
 
   const connection = await pool.getConnection();
-  await connection.ping();
-  connection.release();
 
-  console.log("Conexión MySQL validada correctamente.");
+  try {
+    await connection.ping();
+
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS productos (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nombre VARCHAR(100) NOT NULL,
+        descripcion VARCHAR(255),
+        precio DECIMAL(10,2) NOT NULL,
+        stock INT NOT NULL
+      )
+    `);
+
+    const [rows] = await connection.query(
+      "SELECT COUNT(*) AS total FROM productos"
+    );
+
+    if (rows[0].total === 0) {
+      await connection.query(
+        `
+          INSERT INTO productos (nombre, descripcion, precio, stock)
+          VALUES
+            (?, ?, ?, ?),
+            (?, ?, ?, ?),
+            (?, ?, ?, ?),
+            (?, ?, ?, ?),
+            (?, ?, ?, ?)
+        `,
+        [
+          "Notebook Corporativo",
+          "Notebook para gestion administrativa y trabajo remoto",
+          799990,
+          12,
+
+          "Monitor Profesional 24 pulgadas",
+          "Monitor Full HD para estaciones de trabajo",
+          189990,
+          20,
+
+          "Teclado Mecanico",
+          "Teclado ergonomico para desarrollo y soporte tecnico",
+          59990,
+          35,
+
+          "Mouse Inalambrico",
+          "Mouse optico para oficina y teletrabajo",
+          24990,
+          50,
+
+          "Licencia Software Gestion",
+          "Licencia anual de plataforma de gestion empresarial",
+          149990,
+          10,
+        ]
+      );
+
+      console.log("Datos iniciales de Innovatech cargados.");
+    }
+
+    console.log("Conexion MySQL y estructura de base de datos validadas.");
+  } finally {
+    connection.release();
+  }
 }
 
 // Helper para manejar errores
