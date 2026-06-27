@@ -32,6 +32,26 @@ let pool;
 
 // Inicializar pool de conexiones
 async function initDb() {
+  if (!/^[a-zA-Z0-9_]+$/.test(DB_NAME)) {
+    throw new Error("DB_NAME contiene caracteres no permitidos.");
+  }
+
+  const bootstrapConnection = await mysql.createConnection({
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    port: DB_PORT,
+    connectTimeout: 10000,
+  });
+
+  try {
+    await bootstrapConnection.query(
+      `CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\``
+    );
+  } finally {
+    await bootstrapConnection.end();
+  }
+
   pool = mysql.createPool({
     host: DB_HOST,
     user: DB_USER,
