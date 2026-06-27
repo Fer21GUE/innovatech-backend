@@ -1,0 +1,93 @@
+﻿{
+    "containerDefinitions":  [
+                                 {
+                                     "name":  "innovatech-backend",
+                                     "image":  "476997337226.dkr.ecr.us-east-1.amazonaws.com/innovatech-backend:396ac44",
+                                     "cpu":  0,
+                                     "portMappings":  [
+                                                          {
+                                                              "containerPort":  3001,
+                                                              "hostPort":  3001,
+                                                              "protocol":  "tcp",
+                                                              "name":  "innovatech-backend-3001-tcp",
+                                                              "appProtocol":  "http"
+                                                          }
+                                                      ],
+                                     "essential":  true,
+                                     "environment":  [
+                                                         {
+                                                             "name":  "DB_NAME",
+                                                             "value":  "innovatech_db"
+                                                         },
+                                                         {
+                                                             "name":  "PORT",
+                                                             "value":  "3001"
+                                                         },
+                                                         {
+                                                             "name":  "DB_HOST",
+                                                             "value":  "innovatech-db.c7veqpmnwuzc.us-east-1.rds.amazonaws.com"
+                                                         },
+                                                         {
+                                                             "name":  "DB_PORT",
+                                                             "value":  "3306"
+                                                         },
+                                                         {
+                                                             "name":  "DB_USER",
+                                                             "value":  "innovatech_admin"
+                                                         }
+                                                     ],
+                                     "environmentFiles":  [
+
+                                                          ],
+                                     "mountPoints":  [
+
+                                                     ],
+                                     "volumesFrom":  [
+
+                                                     ],
+                                     "secrets":  [
+                                                     {
+                                                         "name":  "DB_PASSWORD",
+                                                         "valueFrom":  "arn:aws:secretsmanager:us-east-1:476997337226:secret:innovatech/db-password-ON9EnY"
+                                                     }
+                                                 ],
+                                     "ulimits":  [
+
+                                                 ],
+                                     "logConfiguration":  {
+                                                              "logDriver":  "awslogs",
+                                                              "options":  {
+                                                                              "awslogs-group":  "/ecs/innovatech-backend",
+                                                                              "awslogs-region":  "us-east-1",
+                                                                              "awslogs-stream-prefix":  "ecs"
+                                                                          },
+                                                              "secretOptions":  [
+
+                                                                                ]
+                                                          },
+                                     "systemControls":  [
+
+                                                        ]
+                                 }
+                             ],
+    "family":  "innovatech-backend-task",
+    "taskRoleArn":  "arn:aws:iam::476997337226:role/LabRole",
+    "executionRoleArn":  "arn:aws:iam::476997337226:role/LabRole",
+    "networkMode":  "awsvpc",
+    "volumes":  [
+
+                ],
+    "placementConstraints":  [
+
+                             ],
+    "runtimePlatform":  {
+                            "cpuArchitecture":  "X86_64",
+                            "operatingSystemFamily":  "LINUX"
+                        },
+    "requiresCompatibilities":  [
+                                    "FARGATE"
+                                ],
+    "cpu":  "512",
+    "memory":  "1024",
+    "enableFaultInjection":  false
+}
